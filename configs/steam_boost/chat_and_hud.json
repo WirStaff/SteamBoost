@@ -1,0 +1,22 @@
+{
+    "chat": {
+        "enabled": true,
+        "message": "!gПЕРЕЗАЙДИ ПО НАСТОЯЩИМУ IP: !t",
+        "is_dead_user": true
+    },
+    "hud": {
+        "enabled": true,
+        "message": "ХОЧЕШЬ ИГРАТЬ С КОМФОРТНЫМ ПИНГОМ?^nПЕРЕХОДИ ПО НАСТРОЯЩЕМУ IP:",
+        "colors": {
+            "red": 0,
+            "green": 100,
+            "blue": 0
+        },
+        "positions": {
+            "x": -1.0,
+            "y": 0.3
+        },
+        "is_dead_user": true
+    },
+    "delay_sec": 1.0
+}

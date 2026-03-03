@@ -20,7 +20,7 @@ GLOBALS:
 
 public plugin_init()
 {
-    register_plugin("Steam Boost", "1.0.0", "Wirstaff", "https://t.me/steam_boost_bot");
+    register_plugin("Steam Boost", "1.1.0", "Wirstaff", "https://t.me/steam_boost_bot");
 
     LoadConfig();
 
@@ -118,7 +118,7 @@ LoadConfig()
 {
     new path[PLATFORM_MAX_PATH];
     get_localinfo("amxx_configsdir", path, sizeof(path));
-    add(path, sizeof(path), "/steam_boost.json");
+    add(path, sizeof(path), "/steam_boost/core.json");
 
     new EzJSON:config = ezjson_parse(path, true);
 

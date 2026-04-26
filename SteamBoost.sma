@@ -19,7 +19,7 @@ GLOBALS:
 
 public plugin_init()
 {
-    register_plugin("Steam Boost", "2.0.0", "Wirstaff", "https://steam-boost.ximply.ru");
+    register_plugin("Steam Boost", "2.1.0", "Wirstaff", "https://steam-boost.ximply.ru");
 
     LoadConfig();
 
@@ -53,7 +53,7 @@ OnUserConnectedService(const index)
     ExecuteForward(_forwardOnUserConnectedService, _, index);
 }
 
-public client_authorized(index, const authid[])
+public client_putinserver(index)
 {
     if (is_user_bot(index)) {
         return;
@@ -61,7 +61,10 @@ public client_authorized(index, const authid[])
 
     _isUserConnectedService[index] = false;
 
-    ClientConnectRequest(index, authid);
+    new buffer[64];
+    get_user_authid(index, buffer, sizeof(buffer));
+
+    ClientConnectRequest(index, buffer);
 }
 
 ClientConnectRequest(const index, const steamId[])

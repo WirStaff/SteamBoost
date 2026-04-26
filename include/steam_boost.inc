@@ -15,6 +15,7 @@ native bool:SteamBoost_IsUserConnectedService(const index);
 
 /*
     Получает настоящий ИП игрока, даже если он играет через сервис
+    @deprecated
 */
 native SteamBoost_GetUserAddress(const index, buffer[], len);
 

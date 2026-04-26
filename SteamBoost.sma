@@ -14,13 +14,12 @@ enum
 GLOBALS:
     _apiUrl[256],
     _apiToken[256],
-    _userAddress[MAX_PLAYERS + 1][64],
     bool:_isUserConnectedService[MAX_PLAYERS + 1],
     _forwardOnUserConnectedService;
 
 public plugin_init()
 {
-    register_plugin("Steam Boost", "1.1.0", "Wirstaff", "https://t.me/steam_boost_bot");
+    register_plugin("Steam Boost", "2.0.0", "Wirstaff", "https://steam-boost.ximply.ru");
 
     LoadConfig();
 
@@ -41,11 +40,12 @@ public NativeIsUserConnectedService(plugin_id, argc)
     return _isUserConnectedService[index];
 }
 
+//deprecated
 public NativeGetUserAddress(plugin_id, argc)
 {
-    new index = get_param(1);
+    //new index = get_param(1);
     new len = get_param(3);
-    set_string(2, _userAddress[index], len);
+    set_string(2, "0.0.0.0", len);
 }
 
 OnUserConnectedService(const index)
@@ -61,23 +61,19 @@ public client_authorized(index, const authid[])
 
     _isUserConnectedService[index] = false;
 
-    get_user_ip(index, _userAddress[index], sizeof(_userAddress[]), true);
-
-    ClientConnectRequest(index, authid, _userAddress[index]);
+    ClientConnectRequest(index, authid);
 }
 
-ClientConnectRequest(const index, const steamId[], const address[])
+ClientConnectRequest(const index, const steamId[])
 {
     new EzHttpOptions:optionsId = GetCommonRequestOptions();
 
     new buffer[1];
     buffer[USER_ID] = get_user_userid(index);
     ezhttp_option_set_user_data(EzHttpOptions:optionsId, buffer, sizeof(buffer));
-    ezhttp_option_add_url_parameter(optionsId, "steam_id", steamId);
-    ezhttp_option_add_url_parameter(optionsId, "addr", address);
 
     new url[sizeof(_apiUrl) * 2];
-    formatex(url, sizeof(url), "%s/players", _apiUrl);
+    formatex(url, sizeof(url), "%s/v1/server/check-player/%s", _apiUrl, steamId);
 
     ezhttp_get(url, "OnClientConnectResponse", optionsId);
 }
@@ -103,15 +99,19 @@ public OnClientConnectResponse(EzHttpRequest:requestId)
     }
 
     ezhttp_get_data(requestId, buffer, sizeof(buffer));
-    new EzJSON:data = ezjson_parse(buffer);
+    new EzJSON:response = ezjson_parse(buffer);
 
-    ezjson_object_get_string(data, "ip", _userAddress[index], sizeof(_userAddress[]));
+    new EzJSON:data = ezjson_object_get_value(response, "data");
 
-    _isUserConnectedService[index] = true;
+    new isViaBoost = ezjson_object_get_bool(data, "via_boost");
 
-    OnUserConnectedService(index);
+    if (isViaBoost) {
+        _isUserConnectedService[index] = true;
+        OnUserConnectedService(index);
+    }
 
     ezjson_free(data);
+    ezjson_free(response);
 }
 
 LoadConfig() 
@@ -133,9 +133,7 @@ EzHttpOptions:GetCommonRequestOptions()
 
     new EzHttpOptions:optionsId = ezhttp_create_options();
 
-    new buffer[sizeof(_apiToken) * 2];
-    formatex(buffer, sizeof(buffer), " Bearer %s", _apiToken);
-    ezhttp_option_set_header(optionsId, "Authorization", buffer);
+    ezhttp_option_set_header(optionsId, "X-Api-Key", _apiToken);
 
     ezhttp_option_set_plugin_end_behaviour(optionsId, EZH_FORGET_REQUEST);
 

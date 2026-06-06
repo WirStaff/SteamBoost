@@ -37,7 +37,7 @@ GLOBALS:
 
 public plugin_init()
 {
-    register_plugin("[Module]Steam Boost Chat & Hud", "1.0.0", "Wirstaff & @KOH9BbIu", "https://t.me/steam_boost_bot");
+    register_plugin("[Module]Steam Boost Chat & Hud", "1.1.0", "Wirstaff & @KOH9BbIu", "https://t.me/steam_boost_bot");
 
     LoadConfig();
 
@@ -54,7 +54,7 @@ public @OnFloodMessage(taskId)
 
         isAlive = is_user_alive(i);
 
-        if (_hudEnabled) {
+        if (_chatEnabled) {
             if (!_chatIsDeadUser) {
                 SendChatMessage(i);
             } 
@@ -64,7 +64,7 @@ public @OnFloodMessage(taskId)
             }
         }
 
-        if (_chatEnabled) {
+        if (_hudEnabled) {
             if (!_hudIsDeadUser) {
                 SendHudMessage(i);
             } 

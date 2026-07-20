@@ -1,6 +1,7 @@
 #include <amxmodx>
-#include <steam_boost>
 
+#define HOOK_GET_USER_IP
+#include <steam_boost>
 
 public plugin_init()
 {
@@ -11,7 +12,6 @@ public SteamBoost_OnUserConnectedService(const index)
 {
     new buffer[64];
 
-    SteamBoost_GetUserAddress(index, buffer, sizeof(buffer));
-
+    get_user_ip(index, buffer, sizeof(buffer), 1);
     server_print("%d %s", SteamBoost_IsUserConnectedService(index), buffer);
 }

@@ -14,10 +14,22 @@ forward SteamBoost_OnUserConnectedService(const index);
 native bool:SteamBoost_IsUserConnectedService(const index);
 
 /*
-    Получает настоящий ИП игрока, даже если он играет через сервис
-    @deprecated
+    Отдает IP игрока
 */
 native SteamBoost_GetUserAddress(const index, buffer[], len);
+
+#if defined HOOK_GET_USER_IP
+stock SteamBoost_GetUserIp(const index, buffer[], len, withoutPort = 0)
+{
+    if (SteamBoost_IsUserConnectedService(index)) {
+        return SteamBoost_GetUserAddress(index, buffer, len);
+    }
+
+    return get_user_ip(index, buffer, len, withoutPort);
+}
+
+#define get_user_ip SteamBoost_GetUserIp
+#endif
 
 #pragma reqlib steam_boost
 #if !defined AMXMODX_NOAUTOLOAD

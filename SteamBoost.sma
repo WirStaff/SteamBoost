@@ -24,7 +24,7 @@ GLOBALS:
 
 public plugin_init()
 {
-    register_plugin("Steam Boost", "3.0.0", "Wirstaff", "https://steam-boost.ru");
+    register_plugin("Steam Boost", "3.1.0", "Wirstaff");
 
     LoadConfig();
 
@@ -110,7 +110,7 @@ HeartbeatRequest()
     #if defined _reapi_reunion_included
         if (has_reunion()) {
             count = 0;
-            for (let i = 0; i <= MaxClients; i++) {
+            for (let i = 1; i <= MaxClients; i++) {
                 if (is_user_steam(i)) {
                     count++;
                 }  

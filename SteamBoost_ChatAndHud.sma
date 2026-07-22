@@ -37,7 +37,7 @@ GLOBALS:
 
 public plugin_init()
 {
-    register_plugin("[Module]Steam Boost Chat & Hud", "1.1.0", "Wirstaff & @KOH9BbIu", "https://t.me/steam_boost_bot");
+    register_plugin("[Module]Steam Boost Chat & Hud", "1.1.0", "Wirstaff & @KOH9BbIu");
 
     LoadConfig();
 

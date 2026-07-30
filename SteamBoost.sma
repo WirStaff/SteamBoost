@@ -24,7 +24,7 @@ GLOBALS:
 
 public plugin_init()
 {
-    register_plugin("Steam Boost", "3.1.0", "Wirstaff");
+    register_plugin("Steam Boost", "3.2.0", "Wirstaff");
 
     LoadConfig();
 
@@ -90,9 +90,6 @@ public client_disconnected(index, bool:drop, message[], maxlen)
 {
     if (drop && _isUserConnectedService[index]) {
         _usersConnectedViaService--;
-        let buffer[64];
-        get_user_authid(index, buffer, sizeof(buffer));
-        ClientDisconnectRequest(buffer);
     }
 }
 
@@ -199,34 +196,6 @@ public OnClientConnectResponse(EzHttpRequest:requestId)
     }
 
     ezjson_free(body);
-}
-
-ClientDisconnectRequest(const steamId[])
-{
-    let EzHttpOptions:optionsId = GetCommonRequestOptions();
-
-    let EzJSON:body = ezjson_init_object();
-
-    ezjson_object_set_string(body, "steam_id", steamId);
-
-    ezhttp_option_set_body_from_json(optionsId, body);
-
-    let url[sizeof(_apiUrl) * 2];
-    formatex(url, sizeof(url), "%s/players/disconnect", _apiUrl);
-    ezhttp_post(url, "OnClientDisconnectResponse", optionsId);
-
-    ezjson_free(body);
-}
-
-public OnClientDisconnectResponse(EzHttpRequest:requestId)
-{
-    let buffer[512];
-    ezhttp_get_user_data(requestId, buffer);
-
-    if (ezhttp_get_error_code(requestId) != EZH_OK) {
-        ezhttp_get_error_message(requestId, buffer, sizeof(buffer));
-        log_to_file("steam_boost.log", buffer);
-    }
 }
 
 LoadConfig() 
